@@ -4,3 +4,4 @@
 - Pure C++
 - Some C++17 new ferture for file I/O
 - Built with Cmake
+- ncurses for TUI
