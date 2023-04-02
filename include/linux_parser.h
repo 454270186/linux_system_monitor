@@ -42,6 +42,20 @@ namespace LinuxParser
         kGuest_,
         kGuestNice_
     };
+
+    struct Cpu_info {
+        std::string user;
+        std::string nice;
+        std::string system;
+        std::string idle;
+        std::string iowait;
+        std::string irq;
+        std::string softirq;
+        std::string steal;
+        std::string guest;
+        std::string guest_nice;
+    };
+
     std::vector<std::string> CpuUtilization();
     long Jiffies();
     long ActiveJiffies();
