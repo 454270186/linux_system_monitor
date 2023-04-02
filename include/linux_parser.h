@@ -4,6 +4,7 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <unordered_map>
 
 namespace LinuxParser
 {
@@ -68,6 +69,7 @@ namespace LinuxParser
     std::string Uid(int pid);
     std::string User(int pid);
     long int UpTime(int pid);
+    std::unordered_map<std::string, std::string> PrcsCpuUtilization(int pid);
 }; // namespace LinuxParser
 
 #endif

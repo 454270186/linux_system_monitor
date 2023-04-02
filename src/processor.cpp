@@ -20,5 +20,5 @@ float Processor::Utilization() {
 
     total_ = idle_ + non_idle_;
 
-    return non_idle_ / total_;
+    return (total_ - idle_) / total_;
 }

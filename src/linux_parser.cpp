@@ -13,6 +13,7 @@ using std::stol;
 using std::string;
 using std::to_string;
 using std::vector;
+using std::make_pair;
 
 string LinuxParser::OperatingSystem()
 {
@@ -239,7 +240,7 @@ string LinuxParser::Ram(int pid) {
         while (getline(stream, line)) {
             std::istringstream linestream(line);
             linestream >> key >> value;
-            if (key == "VmSize:") {
+            if (key == "VmData:") {
                 return value;
             }
         }
@@ -299,16 +300,65 @@ long LinuxParser::UpTime(int pid) {
     string line;
     string pid_file = to_string(pid);
     string starttime;
+
     std::ifstream stream(kProcDirectory + pid_file + kStatFilename);
+    if (stream.is_open()) {
+        getline(stream, line);
+        std::istringstream linestream(line);
 
-    getline(stream, line);
-    std::istringstream linestream(line);
+        for (int i = 0; i < 21; i++) {
+            linestream >> token;
+        }
 
-    for (int i = 0; i < 21; i++) {
-        linestream >> token;
+        linestream >> starttime;
+
+        return stol(starttime) / sysconf(_SC_CLK_TCK);
+    }
+    
+    return 0;
+}
+
+// Read and return the cpu utilization of specific process
+// in /proc/[pid]/stat:
+// need #14, #15, #16, #17, #22
+// in /proc/uptime:
+// need #1_uptime_of_system
+std::unordered_map<string, string> LinuxParser::PrcsCpuUtilization(int pid) {
+    string token; // value to be skipped
+    string line;
+    string pid_file = to_string(pid);
+    string utime; // #14
+    string stime; // #15
+    string cutime; // #16
+    string cstime; // #17
+    string starttime; // #22
+    string sys_uptime; // system uptime
+    std::unordered_map<string, string> map;
+
+    std::ifstream stream(kProcDirectory + pid_file + kStatFilename);
+    if (stream.is_open()) {
+        getline(stream, line);
+        std::istringstream linestream(line);
+
+        for (int i = 0; i < 13; i++) {
+            linestream >> token;
+        }
+        
+        linestream >> utime >> stime >> cutime >> cstime;
+
+        starttime = to_string(LinuxParser::UpTime(pid));
+        sys_uptime = to_string(LinuxParser::UpTime());
+
+        // store in map
+        map.insert(make_pair("system_uptime", sys_uptime));
+        map.insert(make_pair("utime", utime));
+        map.insert(make_pair("stime", stime));
+        map.insert(make_pair("cutime", cutime));
+        map.insert(make_pair("cstime", cstime));
+        map.insert(make_pair("starttime", starttime));
+
+        return map;
     }
 
-    linestream >> starttime;
-
-    return stol(starttime) / sysconf(_SC_CLK_TCK);
+    return {};
 }
