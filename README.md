@@ -8,8 +8,14 @@
 
 ## Require
 - Linux OS
-- Cmake >= Version 2.6
-- ncurses: text-based graphical output library
+- Cmake >= Version 2.6, 
+  run below to install
+  ```
+  sudo apt-get update
+  sudo apt-get install cmake
+  ```
+
+- ncurses: text-based graphical output library,
   run ```sudo apt install libncurses5-dev libncursesw5-dev``` to install
 - C++ compiler supporting C++17;
 
