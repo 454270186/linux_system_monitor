@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <chrono>
 
 #include "linux_parser.h"
 
@@ -228,7 +229,7 @@ string LinuxParser::Command(int pid) {
     return string();
 }
 
-// Read and return the memory used by a process
+// Read and return the memory used by a process in KB
 // stored in /proc/[pid]/status
 string LinuxParser::Ram(int pid) {
     string key, value;
@@ -240,7 +241,7 @@ string LinuxParser::Ram(int pid) {
         while (getline(stream, line)) {
             std::istringstream linestream(line);
             linestream >> key >> value;
-            if (key == "VmData:") {
+            if (key == "VmSize:") {
                 return value;
             }
         }
@@ -312,7 +313,11 @@ long LinuxParser::UpTime(int pid) {
 
         linestream >> starttime;
 
-        return stol(starttime) / sysconf(_SC_CLK_TCK);
+        // get current time
+        long sys_uptime = LinuxParser::UpTime();
+
+
+        return sys_uptime - (stol(starttime) / sysconf(_SC_CLK_TCK));
     }
     
     return 0;
