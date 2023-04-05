@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <chrono>
 
+// c++17 std::filesystem
+#include <filesystem>
+
 #include "linux_parser.h"
 
 using std::stof;
@@ -57,27 +60,26 @@ string LinuxParser::Kernel()
     return kernel;
 }
 
-// BONUS: Update this to use std::filesystem
+// Update this to use std::filesystem
 vector<int> LinuxParser::Pids()
-{
+{   
+    using namespace std::filesystem;
     vector<int> pids;
-    DIR *directory = opendir(kProcDirectory.c_str());
-    struct dirent *file;
-    while ((file = readdir(directory)) != nullptr)
-    {
-        // Is this a directory?
-        if (file->d_type == DT_DIR)
-        {
-            // Is every character of the name a digit?
-            string filename(file->d_name);
-            if (std::all_of(filename.begin(), filename.end(), isdigit))
-            {
-                int pid = stoi(filename);
-                pids.push_back(pid);
+
+    path proc_path(kProcDirectory);
+    if (exists(proc_path)) {
+        for (const auto& entry : directory_iterator(proc_path)) {
+            if (is_directory(entry)) {
+                path sub_path = entry.path();
+                string sub_name = sub_path.filename().string();
+                if (std::all_of(sub_name.begin(), sub_name.end(), isdigit)) {
+                    int pid = std::stoi(sub_name);
+                    pids.push_back(pid);
+                }
             }
         }
     }
-    closedir(directory);
+
     return pids;
 }
 
