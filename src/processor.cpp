@@ -6,7 +6,7 @@
 using namespace LinuxParser;
 using std::stof;
 
-// TODO: Return the aggregate CPU utilization
+// Return the aggregate CPU utilization
 float Processor::Utilization() {
     cpu_info_ = LinuxParser::CpuUtilization();
     if (cpu_info_.size() <= 0) {

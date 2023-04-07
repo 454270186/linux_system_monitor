@@ -69,7 +69,8 @@ namespace LinuxParser
     std::string Uid(int pid);
     std::string User(int pid);
     long int UpTime(int pid);
-    std::unordered_map<std::string, std::string> PrcsCpuUtilization(int pid);
+    //std::unordered_map<std::string, std::string> PrcsCpuUtilization(int pid);
+    std::vector<std::string> PrcsCpuUtilization(int pid);
 }; // namespace LinuxParser
 
 #endif

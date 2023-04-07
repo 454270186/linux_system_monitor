@@ -330,7 +330,7 @@ long LinuxParser::UpTime(int pid) {
 // need #14, #15, #16, #17, #22
 // in /proc/uptime:
 // need #1_uptime_of_system
-std::unordered_map<string, string> LinuxParser::PrcsCpuUtilization(int pid) {
+std::vector<std::string> LinuxParser::PrcsCpuUtilization(int pid) {
     string token; // value to be skipped
     string line;
     string pid_file = to_string(pid);
@@ -340,7 +340,7 @@ std::unordered_map<string, string> LinuxParser::PrcsCpuUtilization(int pid) {
     string cstime; // #17
     string starttime; // #22
     string sys_uptime; // system uptime
-    std::unordered_map<string, string> map;
+    vector<string> prcs_cpu;
 
     std::ifstream stream(kProcDirectory + pid_file + kStatFilename);
     if (stream.is_open()) {
@@ -356,15 +356,10 @@ std::unordered_map<string, string> LinuxParser::PrcsCpuUtilization(int pid) {
         starttime = to_string(LinuxParser::UpTime(pid));
         sys_uptime = to_string(LinuxParser::UpTime());
 
-        // store in map
-        map.insert(make_pair("system_uptime", sys_uptime));
-        map.insert(make_pair("utime", utime));
-        map.insert(make_pair("stime", stime));
-        map.insert(make_pair("cutime", cutime));
-        map.insert(make_pair("cstime", cstime));
-        map.insert(make_pair("starttime", starttime));
+        prcs_cpu = {utime, stime, cutime, cstime};
 
-        return map;
+        // return map;
+        return prcs_cpu;
     }
 
     return {};
