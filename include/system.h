@@ -17,6 +17,7 @@ public:
     int RunningProcesses();           
     std::string Kernel();             
     std::string OperatingSystem();    
+    std::string Disk();
 
     // TODO: Define any necessary private members
 private:

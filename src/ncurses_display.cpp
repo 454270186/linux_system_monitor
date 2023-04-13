@@ -45,6 +45,9 @@ void NCursesDisplay::DisplaySystem(System &system, WINDOW *window)
     mvwprintw(window, row, 10, "");
     wprintw(window, ProgressBar(system.MemoryUtilization()).c_str());
     wattroff(window, COLOR_PAIR(1));
+    mvwprintw(window, ++row, 2, 
+              ("Disk: " + system.Disk()).c_str());
+    ++row;
     mvwprintw(window, ++row, 2,
               ("Total Processes: " + to_string(system.TotalProcesses())).c_str());
     mvwprintw(
@@ -99,7 +102,7 @@ void NCursesDisplay::Display(System &system, int n)
     start_color(); // enable color
 
     int x_max{getmaxx(stdscr)};
-    WINDOW *system_window = newwin(9, x_max - 1, 0, 0);
+    WINDOW *system_window = newwin(11, x_max - 1, 0, 0);
     WINDOW *process_window =
         newwin(3 + n, x_max - 1, system_window->_maxy + 1, 0);
 

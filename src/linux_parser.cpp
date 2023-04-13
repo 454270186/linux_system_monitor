@@ -106,6 +106,43 @@ float LinuxParser::MemoryUtilization() {
     return (mem_total - mem_free) / mem_total;
 }
 
+// Read and return the disk utilization
+std::string LinuxParser::DiskUtilization() {
+    string file_sys;
+    string size;
+    string used;
+    string avail;
+    string use_per;
+    string mounted;
+
+    FILE* pipe = popen("df -h", "r");
+    if (pipe == NULL) {
+        return string{};  
+    }
+
+    char buf[128];
+    while (fgets(buf, sizeof(buf), pipe) != NULL) {
+        std::string line(buf);
+        std::istringstream linestream(line);
+        linestream >> file_sys >> size >> used >> avail >> use_per >> mounted;
+        if (mounted == "/") {
+            string ret;
+            ret += used + " / ";
+            ret += size;
+            ret += " ----- ";
+            ret += use_per + "\%Used";
+
+            return ret;
+        }
+    }
+
+
+    pclose(pipe);
+    return string{};
+}
+
+
+
 // Read and return the system uptime
 long LinuxParser::UpTime() {
     long up_time;

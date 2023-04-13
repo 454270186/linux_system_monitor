@@ -28,6 +28,7 @@ namespace LinuxParser
     int RunningProcesses();
     std::string OperatingSystem();
     std::string Kernel();
+    std::string DiskUtilization();
 
     // CPU
     enum CPUStates
