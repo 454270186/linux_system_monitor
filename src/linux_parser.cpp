@@ -286,7 +286,7 @@ string LinuxParser::Ram(int pid) {
         }
     }
 
-    return string();
+    return "0.0";
 }
 
 // Read and return the user ID associated with a process
@@ -375,8 +375,8 @@ std::vector<std::string> LinuxParser::PrcsCpuUtilization(int pid) {
     string stime; // #15
     string cutime; // #16
     string cstime; // #17
-    string starttime; // #22
-    string sys_uptime; // system uptime
+    // string starttime; // #22
+    // string sys_uptime; // system uptime
     vector<string> prcs_cpu;
 
     std::ifstream stream(kProcDirectory + pid_file + kStatFilename);
@@ -390,8 +390,8 @@ std::vector<std::string> LinuxParser::PrcsCpuUtilization(int pid) {
         
         linestream >> utime >> stime >> cutime >> cstime;
 
-        starttime = to_string(LinuxParser::UpTime(pid));
-        sys_uptime = to_string(LinuxParser::UpTime());
+        // starttime = to_string(LinuxParser::UpTime(pid));
+        // sys_uptime = to_string(LinuxParser::UpTime());
 
         prcs_cpu = {utime, stime, cutime, cstime};
 

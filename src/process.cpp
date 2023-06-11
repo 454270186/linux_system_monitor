@@ -25,8 +25,8 @@ float Process::CpuUtilization() {
     float stime;
     float cutime;
     float cstime;
-    float starttime;
-    float sys_uptime;
+    // float starttime;
+    // float sys_uptime;
     std::vector<string> prcs_cpu = LinuxParser::PrcsCpuUtilization(pid_);
     if (prcs_cpu.size() < 4) {
         return 0.0;
@@ -36,12 +36,12 @@ float Process::CpuUtilization() {
     stime = stof(prcs_cpu[1]);
     cutime = stof(prcs_cpu[2]);
     cstime = stof(prcs_cpu[3]);
-    starttime = LinuxParser::UpTime(pid_);
-    sys_uptime = LinuxParser::UpTime();
+    // starttime = LinuxParser::UpTime(pid_);
+    // sys_uptime = LinuxParser::UpTime();
 
     // calculate
     total_time = utime + stime + cutime + cstime;
-    elapsed_time = sys_uptime - (starttime / sysconf(_SC_CLK_TCK));
+    elapsed_time = LinuxParser::UpTime(pid_);
 
     return ((total_time / sysconf(_SC_CLK_TCK)) / elapsed_time);
 }
